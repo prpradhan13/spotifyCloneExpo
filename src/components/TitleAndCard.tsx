@@ -14,7 +14,7 @@ const TitleAndCard = ({ title, dataList }: any) => {
 
   return (
     <View className="w-full mt-10">
-      <Text style={{ fontFamily: "Montserrat" }} className="text-white text-[26px] font-bold">{title}</Text>
+      <Text style={{ fontFamily: "Montserrat" }} className="text-white text-[22px] font-bold">{title}</Text>
 
       <ScrollView
         horizontal
@@ -39,7 +39,7 @@ const TitleAndCard = ({ title, dataList }: any) => {
                   source={{
                     uri: item.imageUrl,
                   }}
-                  style={{ width: "100%", height: 170 }}
+                  style={{ width: "100%", height: 160 }}
                   resizeMode="cover"
                 />
                 <View className="mt-3">

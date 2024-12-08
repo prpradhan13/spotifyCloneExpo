@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import {
   getAlbumData,
+  getArtistsData,
   getPopularPlaylistsData,
   getSeveralAlbumsData,
 } from "@/src/API/SpotifyAPI";
@@ -40,3 +41,15 @@ export const usePopularPlaylists = () => {
     data: query.data?.popularPlaylists || [],
   };
 };
+
+export const useSeveralArtist = () => {
+  const query = useQuery({
+    queryKey: ["severalArtists"],
+    queryFn: getArtistsData,
+  });
+
+  return {
+    ...query,
+    data: query.data?.artists || []
+  }
+}

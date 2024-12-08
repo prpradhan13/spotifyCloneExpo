@@ -8,11 +8,13 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { usePopularAlbums, usePopularPlaylists } from "@/src/utils/useSpotifyQueries";
+import { usePopularAlbums, usePopularPlaylists, useSeveralArtist } from "@/src/utils/useSpotifyQueries";
+import ArtistShowcase from "@/src/components/ArtistShowcase";
 
 export default function Index() {
   const albums = usePopularAlbums();
   const playLists = usePopularPlaylists();
+  const artists = useSeveralArtist();
 
   return (
     <SafeAreaView className="bg-[#191414] flex-1 py-8 pl-5">
@@ -32,6 +34,14 @@ export default function Index() {
           <View className="w-full">
             <TitleAndCard title="Popular Albums" dataList={albums} />
             <TitleAndCard title="Popular Playlists" dataList={playLists} />
+
+            
+              <ArtistShowcase artistsData={artists} />
+            
+          </View>
+
+          <View className="h-[50px]">
+
           </View>
       </ScrollView>
     </SafeAreaView>

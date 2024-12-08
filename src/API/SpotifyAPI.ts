@@ -7,6 +7,7 @@ const api = axios.create({
 
 // Convert the array to a comma-separated string
 const albumsIds = data.popularAlbums.join(',');
+const artistsIds = data.artists.join(',');
 const popularPlaylistIds = data.popularPlaylists;
 
 export const getSeveralAlbumsData = async () => {
@@ -52,3 +53,21 @@ export const getPopularPlaylistsData = async () => {
         return [];
     }
 }
+
+export const getArtistsData = async () => {
+    try {
+        const res = await api.get(
+            '/artists',
+            {
+                params: {
+                    ids: artistsIds
+                }
+            }
+        )
+        
+        return res.status === 200 ? res.data : [];
+    } catch (error: any) {
+        console.log(error.response?.data || error.message);
+        return [];
+    }
+};
