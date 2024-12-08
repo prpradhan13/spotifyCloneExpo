@@ -8,10 +8,11 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { usePopularAlbums } from "@/src/utils/useSpotifyQueries";
+import { usePopularAlbums, usePopularPlaylists } from "@/src/utils/useSpotifyQueries";
 
 export default function Index() {
-  const { albums, isLoading, isError, error, refetch } = usePopularAlbums();
+  const albums = usePopularAlbums();
+  const playLists = usePopularPlaylists();
 
   return (
     <SafeAreaView className="bg-[#191414] flex-1 py-8 pl-5">
@@ -28,21 +29,10 @@ export default function Index() {
         </View>
 
         {/* First Title and Cards */}
-        {isError ? (
-          <View className="flex-1 items-center justify-center mt-10">
-            <Text className="text-red-500 mb-4">Error: {error.message}</Text>
-            <TouchableOpacity
-              onPress={() => refetch()}
-              className="bg-red-500 px-4 py-2 rounded"
-            >
-              <Text className="text-white font-bold">Retry</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
           <View className="w-full">
-            <TitleAndCard title="Popular Albums" dataList={albums} isLoading={isLoading} />
+            <TitleAndCard title="Popular Albums" dataList={albums} />
+            <TitleAndCard title="Popular Playlists" dataList={playLists} />
           </View>
-        )}
       </ScrollView>
     </SafeAreaView>
   );
