@@ -15,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.prp07.spotifyCloneExpo"
     },
     "web": {
       "bundler": "metro",
@@ -36,7 +37,9 @@
       [
         "expo-font",
         {
-          "fonts": ["./src/assets/fonts/Montserrat-Regular.ttf"]
+          "fonts": [
+            "./src/assets/fonts/Montserrat-Regular.ttf"
+          ]
         }
       ]
     ],
