@@ -26,7 +26,6 @@ const TabLayout = () => {
         name="index"
         options={{
           title: "Home",
-          
           tabBarIcon: ({ focused }) => (
             <MaterialIcons name="home-filled" size={28} color={focused ? "white" : "#ababab"} />
           )

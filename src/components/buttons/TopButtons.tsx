@@ -16,5 +16,3 @@ const TopButtons = ({ btnName, onPress }: TopButtonsProps) => {
 };
 
 export default TopButtons;
-
-const styles = StyleSheet.create({});

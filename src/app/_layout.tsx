@@ -3,8 +3,12 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as NavigationBar from "expo-navigation-bar";
 import { useEffect } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-export default function RootLayout() {
+// Create a client
+const queryClient = new QueryClient()
+
+export const Layout = () => {
   
   useEffect(() => {
     // Set the navigation bar background color
@@ -17,9 +21,18 @@ export default function RootLayout() {
     <>
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="album/[id]" options={{ headerShown: false }} />
       <Stack.Screen name="+not-found" />
     </Stack>
-    <StatusBar style="light" backgroundColor="black" />
+    <StatusBar style="light" backgroundColor="transparent" />
     </>
   );
+}
+
+export default function MainLayout() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Layout />
+    </QueryClientProvider>
+  )
 }
