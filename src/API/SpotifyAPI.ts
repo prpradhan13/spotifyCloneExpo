@@ -54,6 +54,17 @@ export const getPopularPlaylistsData = async () => {
     }
 }
 
+export const getSinglePlaylistsData = async (playlistId: string) => {
+    try {
+        const res = await api.get(`/playlists/${playlistId}`)
+        
+        return res.status === 200 ? res.data : [];
+    } catch (error: any) {
+        console.log(error.response?.data || error.message);
+        return [];
+    }
+}
+
 export const getArtistsData = async () => {
     try {
         const res = await api.get(

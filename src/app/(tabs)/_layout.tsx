@@ -13,12 +13,11 @@ const TabLayout = () => {
         tabBarButton: HapticTab,
         tabBarActiveTintColor: "white",
         tabBarStyle: {
-          backgroundColor: "transparent",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
           position: "absolute",
-          bottom: 2,
+          bottom: 0,
           shadowColor: "transparent",
           borderTopWidth: 0,
-          backdropFilter: "blur(10px)"
         },
       }}
     >

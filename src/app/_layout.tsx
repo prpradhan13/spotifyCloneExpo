@@ -11,10 +11,8 @@ const queryClient = new QueryClient()
 export const Layout = () => {
   
   useEffect(() => {
-    // Set the navigation bar background color
-    NavigationBar.setBackgroundColorAsync("#191414"); // Change the color here
-    // Optionally set the button style (light or dark)
-    NavigationBar.setButtonStyleAsync("light"); // Icons will be light-colored
+    NavigationBar.setBackgroundColorAsync("#191414");
+    NavigationBar.setButtonStyleAsync("light");
   }, []);
 
   return (
@@ -24,7 +22,7 @@ export const Layout = () => {
       <Stack.Screen name="album/[id]" options={{ headerShown: false }} />
       <Stack.Screen name="+not-found" />
     </Stack>
-    <StatusBar style="light" backgroundColor="transparent" />
+    <StatusBar style="light" backgroundColor="transparent" translucent  />
     </>
   );
 }

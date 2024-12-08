@@ -1,7 +1,7 @@
 import {
   ActivityIndicator,
+  FlatList,
   Image,
-  Pressable,
   ScrollView,
   Text,
   View,
@@ -9,40 +9,54 @@ import {
 import React from "react";
 import { useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useSingleAlbum } from "@/src/utils/useSpotifyQueries";
+import {
+  useSingleAlbum,
+  useSinglePlaylist,
+} from "@/src/utils/useSpotifyQueries";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Entypo from "@expo/vector-icons/Entypo";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
+import Tracks from "@/src/components/Tracks";
 
 const album = () => {
-  const { id } = useLocalSearchParams();
+  const { queryTitle, id } = useLocalSearchParams();
 
-  const { albumData, isLoading, isError, error } = useSingleAlbum(id);
+  const isPlaylist = queryTitle === "Popular playlists";
 
-  const albumImage = albumData?.images[0]?.url;
-  const albumArtistNames = albumData?.artists.map((artist: any) => artist.name);
+  const { data, isLoading, isError, error } = isPlaylist
+    ? useSinglePlaylist(id)
+    : useSingleAlbum(id);
+
+  const image = data?.imageUrl;
+  const artistNames = data?.artist?.map((item: any) => item.name) || "";
+  const albumTracks = data?.tracks || [];
+  const playListTracks = data?.tracks?.map((elem: any) => elem.track) || [];
 
   if (isLoading) {
-    <View className="flex-1 bg-[#191414]">
-      <ActivityIndicator size={"large"} color={"#1ED760"} />
-    </View>;
+    return (
+      <View className="flex-1 bg-[#191414] justify-center items-center">
+        <ActivityIndicator size={"large"} color={"#1ED760"} />
+      </View>
+    );
   }
 
   if (isError) {
-    <View className="flex-1 bg-[#191414] justify-center items-center">
-      <Text className="text-white">Error: {error.message}</Text>
-    </View>;
+    return (
+      <View className="flex-1 bg-[#191414] justify-center items-center">
+        <Text className="text-white">Error: {error.message}</Text>
+      </View>
+    );
   }
 
   return (
     <SafeAreaView className={`bg-[#191414] flex-1 px-5 pt-5`}>
-      <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
+      <View className="flex-1">
         <View className="w-full flex justify-center items-center overflow-hidden">
           {/* Image */}
           <View style={{ width: 260, height: 260, marginTop: 8 }}>
             <Image
-              source={{ uri: albumImage }}
+              source={{ uri: image }}
               style={{
                 width: "100%",
                 height: "100%",
@@ -56,17 +70,23 @@ const album = () => {
           {/* Album Details */}
           <View className="w-full mt-8">
             <Text className="text-white font-bold text-xl uppercase">
-              {albumData?.name}
+              {data?.name}
             </Text>
-            <Text className="text-white font-semibold text-sm capitalize mt-1">
-              {albumArtistNames?.length > 2
-                ? `${albumArtistNames.slice(0, 2).join(", ")} +${
-                    albumArtistNames?.length - 2
-                  }`
-                : albumArtistNames?.join(", ")}
-            </Text>
+              {isPlaylist ? (
+                <Text className="text-white font-semibold text-sm capitalize mt-1">
+                  {data?.playListOwnerName}
+                </Text>
+              ) : (
+                <Text className="text-white font-semibold text-sm capitalize mt-1">
+                  {artistNames?.length > 2
+                    ? `${artistNames?.slice(0, 2).join(", ")} +${
+                        artistNames?.length - 2
+                      }`
+                    : artistNames?.join(", ")}
+                </Text>
+              )}
             <Text className="text-[#949494] font-medium text-sm capitalize mt-1">
-              {albumData?.type} • {albumData?.release_date.split("-")[0]}
+              {data?.type} • {data?.releaseDate?.split("-")[0]}
             </Text>
           </View>
         </View>
@@ -75,7 +95,7 @@ const album = () => {
           {/* Left part */}
           <View className="w-[70%] flex-row items-center gap-6">
             <Image
-              source={{ uri: albumImage }}
+              source={{ uri: image }}
               style={{
                 width: 40,
                 height: 50,
@@ -106,32 +126,16 @@ const album = () => {
           </View>
         </View>
 
-        {/* Music List */}
-        <View className="w-full mt-6 gap-5">
-          {albumData?.tracks?.items?.map((item: any) => (
-            <Pressable
-              key={item?.id}
-              className="w-full flex-row justify-between"
-            >
-              <View className="w-[93%]">
-                <Text className="text-white text-lg font-medium">
-                  {item?.name}
-                </Text>
-                <Text className="text-[#cdc7c7]">
-                  {item?.artists.map((artist: any) => artist.name).join(", ")}
-                </Text>
-              </View>
-              <View className="flex justify-center">
-                <MaterialCommunityIcons
-                  name="dots-vertical"
-                  size={24}
-                  color="#cdc7c7"
-                />
-              </View>
-            </Pressable>
-          ))}
+        <View className="mt-6">
+          <FlatList
+            data={isPlaylist ? playListTracks : albumTracks} // Wrap `data` inside an array because `data` is a object
+            keyExtractor={(item) => item?.id}
+            initialNumToRender={20}
+            removeClippedSubviews={true}
+            renderItem={({ item }) => <Tracks track={item} /> }
+          />
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };

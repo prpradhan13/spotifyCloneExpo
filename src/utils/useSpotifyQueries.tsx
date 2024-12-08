@@ -1,9 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { dataTagErrorSymbol, useQuery } from "@tanstack/react-query";
 import {
   getAlbumData,
   getArtistsData,
   getPopularPlaylistsData,
   getSeveralAlbumsData,
+  getSinglePlaylistsData,
 } from "@/src/API/SpotifyAPI";
 
 export const usePopularAlbums = () => {
@@ -26,7 +27,7 @@ export const useSingleAlbum = (albumId: string) => {
 
   return {
     ...query,
-    albumData: query.data?.playListData,
+    data: query.data?.playListData,
   };
 };
 
@@ -39,6 +40,18 @@ export const usePopularPlaylists = () => {
   return {
     ...query,
     data: query.data?.popularPlaylists || [],
+  };
+};
+
+export const useSinglePlaylist = (playlistId: string) => {
+  const query = useQuery({
+    queryKey: [`playlist_${playlistId}`],
+    queryFn: () => getSinglePlaylistsData(playlistId),
+  });
+
+  return {
+    ...query,
+    data: query.data?.playList,
   };
 };
 
