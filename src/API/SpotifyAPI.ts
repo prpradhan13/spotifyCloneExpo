@@ -107,3 +107,18 @@ export const getArtistTracks = async (artistId: string) => {
         return [];
     }
 }
+
+export const getTrackDetails = async (trackId: string) => {
+    if (!trackId) return null;
+    try {
+        const res = await api.get(
+            `/tracks/${trackId}`
+        )
+
+        return res.status === 200 ? res.data : {};
+
+    } catch (error: any) {
+        console.log(error.response?.data || error.message);
+        return {};
+    }
+}

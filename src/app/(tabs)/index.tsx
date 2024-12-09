@@ -8,9 +8,17 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import { usePopularAlbums, usePopularPlaylists, useSeveralArtist } from "@/src/utils/useSpotifyQueries";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import {
+  usePopularAlbums,
+  usePopularPlaylists,
+  useSeveralArtist,
+} from "@/src/utils/useSpotifyQueries";
 import ArtistShowcase from "@/src/components/ArtistShowcase";
+import BottomPlayer from "@/src/components/BottomPlayer";
 
 export default function Index() {
   const albums = usePopularAlbums();
@@ -18,8 +26,8 @@ export default function Index() {
   const artists = useSeveralArtist();
 
   return (
-    <SafeAreaView className="bg-[#191414] flex-1 pt-2 pl-5">
-      <ScrollView >
+    <View className="flex-1">
+      <ScrollView className="bg-[#191414] pt-14 pl-5">
         {/* Top most part */}
         <View className="w-full flex-row gap-4">
           <TouchableOpacity className="bg-activeButton rounded-full w-10 h-10 items-center justify-center">
@@ -32,26 +40,16 @@ export default function Index() {
         </View>
 
         {/* First Title and Cards */}
-          <View className="w-full">
-            <TitleAndCard title="Popular albums" dataList={albums} />
-            <TitleAndCard title="Popular playlists" dataList={playLists} />
-            <ArtistShowcase artistsData={artists} />
-          </View>
+        <View className="w-full">
+          <ArtistShowcase artistsData={artists} />
+          <TitleAndCard title="Popular albums" dataList={albums} />
+          <TitleAndCard title="Popular playlists" dataList={playLists} />
+        </View>
 
-            
-            
+        <View className="h-[21vh]">
 
-          <View className="h-[50px]">
-
-          </View>
+        </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "transparent",
-  },
-});

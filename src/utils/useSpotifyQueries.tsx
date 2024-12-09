@@ -7,6 +7,7 @@ import {
   getSeveralAlbumsData,
   getSingleArtistData,
   getSinglePlaylistsData,
+  getTrackDetails,
 } from "@/src/API/SpotifyAPI";
 import { useMemo } from "react";
 
@@ -99,5 +100,18 @@ export const useSingleArtistTracks = (artistId: string) => {
   return {
     ...query,
     data
+  }
+}
+
+export const useTrackDetails = (trackId: string | null) => {
+  const query =  useQuery({
+    queryKey: [`track_${trackId}`],
+    queryFn: () => getTrackDetails(trackId as string),
+    enabled: !!trackId
+  });
+
+  return{
+    ...query,
+    trackData: query.data?.trackDetails
   }
 }

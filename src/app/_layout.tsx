@@ -1,29 +1,35 @@
 import "@/src/global.css";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import * as NavigationBar from "expo-navigation-bar";
-import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import PlayerProvider from "../context/PlayerProvider";
 
 // Create a client
 const queryClient = new QueryClient()
 
 export const Layout = () => {
   
-  useEffect(() => {
-    NavigationBar.setBackgroundColorAsync("#191414");
-    NavigationBar.setButtonStyleAsync("light");
-  }, []);
+  // useEffect(() => {
+  //   NavigationBar.setPositionAsync('absolute')
+  //   NavigationBar.setButtonStyleAsync("light");
+  //   NavigationBar.setBackgroundColorAsync('rgba(0, 0, 0, 0.5)');
+  // }, []);
 
   return (
     <>
+    <StatusBar style="light" backgroundColor="rgba(0, 0, 0, 0.5)" translucent  />
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="album/[id]" options={{ headerShown: false }} />
-      <Stack.Screen name="artistTracks/[artistId]" options={{ headerShown: false }} />
+      <Stack.Screen name="album/[id]" options={{ headerShown: false, animation: 'slide_from_bottom'  }} />
+      <Stack.Screen 
+        name="artistTracks/[artistId]"
+        options={{ 
+          headerShown: false,
+          animation: 'slide_from_bottom' 
+        }} 
+      />
       <Stack.Screen name="+not-found" />
     </Stack>
-    <StatusBar style="light" backgroundColor="transparent" translucent  />
     </>
   );
 }
@@ -31,7 +37,9 @@ export const Layout = () => {
 export default function MainLayout() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Layout />
+      <PlayerProvider>
+        <Layout />
+      </PlayerProvider>
     </QueryClientProvider>
   )
 }
