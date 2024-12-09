@@ -18,9 +18,13 @@ import Entypo from "@expo/vector-icons/Entypo";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import Tracks from "@/src/components/Tracks";
+import { usePlayer } from "@/src/context/PlayerProvider";
+import BottomPlayer from "@/src/components/BottomPlayer";
+import SmallPlayer from "@/src/components/SmallPlayer";
 
 const album = () => {
   const { queryTitle, id } = useLocalSearchParams();
+  const { track } = usePlayer();
 
   const isPlaylist = queryTitle === "Popular playlists";
 
@@ -50,8 +54,8 @@ const album = () => {
   }
 
   return (
-    <SafeAreaView className={`bg-[#191414] flex-1 px-5 pt-5`}>
-      <View className="flex-1">
+    <SafeAreaView className={`bg-[#191414] flex-1 pt-5`}>
+      <View className="flex-1 px-5">
         <View className="w-full flex justify-center items-center overflow-hidden">
           {/* Image */}
           <View style={{ width: 260, height: 260, marginTop: 8 }}>
@@ -136,6 +140,12 @@ const album = () => {
           />
         </View>
       </View>
+
+      {track && (
+        <View className="">
+          <SmallPlayer trackId={track?.id} />
+        </View>
+      )}
     </SafeAreaView>
   );
 };

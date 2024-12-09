@@ -1,18 +1,23 @@
-import { useContext, createContext, useState, PropsWithChildren } from "react"
-
-interface PlayerContextType {
-    track: string | null; // Adjust type as per your `track` structure
-    setTrack: (trackId: string | null) => void;
-}
+import { useContext, createContext, useState, PropsWithChildren, useEffect } from "react"
+import { useTrackDetails } from "../utils/useSpotifyQueries";
+import { PlayerContextType, TrackType } from "../types/TrackTypes";
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
 
-
 export default function PlayerProvider({children}: PropsWithChildren) {
-    const [track, setTrack] = useState<string | null>(null);
+    const [trackId, setTrackId] = useState<string | null>(null);
+    const [track, setTrack] = useState<TrackType | null>(null);
+
+    const { trackData, isLoading, isError, error } = useTrackDetails(trackId);
+
+    useEffect(() => {
+      if (trackData) {
+        setTrack(trackData); // Update the track state when data is fetched
+      }
+    }, [trackData]);
 
     return (
-        <PlayerContext.Provider value={{ track, setTrack }}>
+        <PlayerContext.Provider value={{ setTrackId, track,  isLoading, isError, error }}>
             {children}
         </PlayerContext.Provider>
     )

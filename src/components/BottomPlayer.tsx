@@ -1,31 +1,32 @@
-import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
+import { ActivityIndicator, Image, Pressable, Text, View } from "react-native";
+import React from "react";
 import { usePlayer } from "../context/PlayerProvider";
 import { useTrackDetails } from "../utils/useSpotifyQueries";
 import Entypo from "@expo/vector-icons/Entypo";
 
 const BottomPlayer = () => {
-  const { track } = usePlayer();
-
-  const { trackData, isLoading, isError } = useTrackDetails(track || "");
-
+  const { track,  isLoading, isError } = usePlayer();
+  
   if (!track) return null;
 
   return (
     <View
-      className={`w-full p-3 absolute bottom-14 ${track ? "block" : "hidden"}`}
+      className={`w-full p-3 absolute bottom-14 ${track ? "block": "hidden"}`}
     >
-      <View className="bg-[#1ED760] w-full h-20 rounded-md p-3 flex-row">
+      <Pressable
+        // onPress={() => console.log('Pressed', trackData?.id)}
+        className="bg-[#1ED760] w-full h-20 rounded-md p-3 flex-row"
+      >
         {isLoading && <ActivityIndicator />}
         {isError && (
           <Text className="text-red-500">Error loading track details</Text>
         )}
 
-        {trackData && (
+        {track && (
           <View className="w-full flex-row justify-between">
             <View className="flex-row items-center gap-3">
               <Image
-                source={{ uri: trackData?.imageUrl }}
+                source={{ uri: track?.imageUrl }}
                 style={{
                   width: 50,
                   height: "100%",
@@ -39,10 +40,10 @@ const BottomPlayer = () => {
                   className="text-black font-semibold max-w-48"
                   numberOfLines={1}
                 >
-                  {trackData?.trackName}
+                  {track?.trackName}
                 </Text>
                 <Text className="text-black text-sm max-w-48" numberOfLines={1}>
-                  {trackData?.artists?.map((artist) => artist.name).join(", ")}
+                  {track?.artists?.map((artist: any) => artist.name).join(", ")}
                 </Text>
               </View>
             </View>
@@ -52,7 +53,7 @@ const BottomPlayer = () => {
             </View>
           </View>
         )}
-      </View>
+      </Pressable>
     </View>
   );
 };

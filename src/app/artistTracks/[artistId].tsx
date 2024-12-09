@@ -17,11 +17,13 @@ import {
   useSingleArtistTracks,
 } from "@/src/utils/useSpotifyQueries";
 import { usePlayer } from "@/src/context/PlayerProvider";
+import BottomPlayer from "@/src/components/BottomPlayer";
+import SmallPlayer from "@/src/components/SmallPlayer";
 
 const index = () => {
   const { artistId } = useLocalSearchParams();
   const scrollY = useRef(new Animated.Value(0)).current; // Track scrolling
-  const { setTrack } = usePlayer()
+  const { setTrackId, track } = usePlayer()
 
   const { data } = useSingleArtistTracks(artistId);
   const { artistDetails, isLoading, isError, error } =
@@ -34,6 +36,10 @@ const index = () => {
     outputRange: [300, 100], // Image height range
     extrapolate: "clamp", // Prevent values outside range
   });
+
+  const handleTrackClick = (trackId: string) => {
+    setTrackId(trackId);
+  }
   
   if (isLoading) {
     return (
@@ -86,9 +92,9 @@ const index = () => {
             Top Tracks
           </Text>
 
-          {data?.map((track) => (
+          {data?.map((track: any) => (
             <Pressable 
-              onPress={() => setTrack(track.id)} 
+              onPress={() => handleTrackClick(track?.id)}
               key={track?.id} className="flex-row items-center mb-4"
             >
               <Image
@@ -109,6 +115,12 @@ const index = () => {
           ))}
         </View>
       </Animated.ScrollView>
+
+      {track && (
+        <View className="">
+          <SmallPlayer trackId={track?.id} />
+        </View>
+      )}
     </SafeAreaView>
   );
 };
