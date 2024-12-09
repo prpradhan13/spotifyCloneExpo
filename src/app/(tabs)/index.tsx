@@ -16,16 +16,10 @@ export default function Index() {
   const albums = usePopularAlbums();
   const playLists = usePopularPlaylists();
   const artists = useSeveralArtist();
-  const insets = useSafeAreaInsets();
 
   return (
     <SafeAreaView className="bg-[#191414] flex-1 pt-2 pl-5">
-      <ScrollView 
-        style={[
-          styles.container,
-          { paddingBottom: insets.bottom }, // Ensure content avoids overlap
-        ]}
-      >
+      <ScrollView >
         {/* Top most part */}
         <View className="w-full flex-row gap-4">
           <TouchableOpacity className="bg-activeButton rounded-full w-10 h-10 items-center justify-center">

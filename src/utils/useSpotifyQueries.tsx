@@ -2,10 +2,13 @@ import { dataTagErrorSymbol, useQuery } from "@tanstack/react-query";
 import {
   getAlbumData,
   getArtistsData,
+  getArtistTracks,
   getPopularPlaylistsData,
   getSeveralAlbumsData,
+  getSingleArtistData,
   getSinglePlaylistsData,
 } from "@/src/API/SpotifyAPI";
+import { useMemo } from "react";
 
 export const usePopularAlbums = () => {
   const query = useQuery({
@@ -25,9 +28,11 @@ export const useSingleAlbum = (albumId: string) => {
     queryFn: () => getAlbumData(albumId),
   });
 
+  const data = useMemo(() => query.data?.playListData, [query.data])
+
   return {
     ...query,
-    data: query.data?.playListData,
+    data,
   };
 };
 
@@ -49,9 +54,11 @@ export const useSinglePlaylist = (playlistId: string) => {
     queryFn: () => getSinglePlaylistsData(playlistId),
   });
 
+  const data = useMemo(() => query.data?.playList, [query.data])
+
   return {
     ...query,
-    data: query.data?.playList,
+    data,
   };
 };
 
@@ -64,5 +71,33 @@ export const useSeveralArtist = () => {
   return {
     ...query,
     data: query.data?.artists || []
+  }
+}
+
+export const useSingleArtist = (artistId: string) => {
+  const query = useQuery({
+    queryKey: [`artist_${artistId}`],
+    queryFn: () => getSingleArtistData(artistId),
+  });
+
+  const artistDetails = useMemo(() => query.data?.artist, [query.data])
+
+  return {
+    ...query,
+    artistDetails
+  }
+}
+
+export const useSingleArtistTracks = (artistId: string) => {
+  const query = useQuery({
+    queryKey: [`artistTracks_${artistId}`],
+    queryFn: () => getArtistTracks(artistId),
+  });
+
+  const data = useMemo(() => query.data?.artistTopTracks, [query.data]);
+
+  return {
+    ...query,
+    data
   }
 }

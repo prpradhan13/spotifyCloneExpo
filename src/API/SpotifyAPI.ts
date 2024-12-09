@@ -82,3 +82,28 @@ export const getArtistsData = async () => {
         return [];
     }
 };
+
+export const getSingleArtistData = async (artistId: string) => {
+    try {
+        const res = await api.get(`/artists/${artistId}`)
+
+        return res.status === 200 ? res.data : {}
+        
+    } catch (error: any) {
+        console.log(error.response?.data || error.message);
+        return {};
+    }
+};
+
+export const getArtistTracks = async (artistId: string) => {
+    try {
+        const res = await api.get(
+            `/artists/${artistId}/top-tracks`
+        )
+
+        return res.status === 200 ? res.data : [];
+    } catch (error: any) {
+        console.log(error.response?.data || error.message);
+        return [];
+    }
+}

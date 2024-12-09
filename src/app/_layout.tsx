@@ -20,6 +20,7 @@ export const Layout = () => {
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="album/[id]" options={{ headerShown: false }} />
+      <Stack.Screen name="artistTracks/[artistId]" options={{ headerShown: false }} />
       <Stack.Screen name="+not-found" />
     </Stack>
     <StatusBar style="light" backgroundColor="transparent" translucent  />

@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import React from "react";
 import { ArtistsProps } from "./types";
+import { router } from "expo-router";
 
 const ArtistShowcase = ({ artistsData }: any) => {
   return (
@@ -19,7 +20,11 @@ const ArtistShowcase = ({ artistsData }: any) => {
         className=""
       >
         {artistsData?.data.map((artist: ArtistsProps) => (
-          <Pressable key={artist?.id} className="flex items-center mr-4">
+          <Pressable 
+            key={artist?.id}
+            onPress={() => router.push(`/artistTracks/${artist?.id}`)}
+            className="flex items-center mr-4"
+          >
             {artistsData.isLoading ? (
               <View className="w-full h-[180px] bg-transparent flex justify-center items-center">
                 <ActivityIndicator size="large" color="#1DB954" />
