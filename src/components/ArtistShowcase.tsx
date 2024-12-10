@@ -34,13 +34,13 @@ const ArtistShowcase = ({ artistsData }: any) => {
                 <Image
                   source={{ uri: artist.imageUrl }}
                   style={{
-                    width: 170,
-                    height: 170,
+                    width: 150,
+                    height: 150,
                     borderRadius: 100,
                   }}
                   resizeMode="cover"
                 />
-                <Text className="text-white font-bold text-[20px] mt-4">
+                <Text className="text-white font-bold text-[16px] mt-4">
                   {artist.artistName}
                 </Text>
               </>

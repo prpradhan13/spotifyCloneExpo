@@ -143,7 +143,7 @@ const album = () => {
 
       {track && (
         <View className="">
-          <SmallPlayer trackId={track?.id} />
+          <SmallPlayer />
         </View>
       )}
     </SafeAreaView>

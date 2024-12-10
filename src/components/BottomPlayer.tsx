@@ -1,21 +1,34 @@
-import { ActivityIndicator, Image, Pressable, Text, View } from "react-native";
-import React from "react";
+import {
+  ActivityIndicator,
+  Animated,
+  Dimensions,
+  Image,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
+import React, { useRef, useState } from "react";
 import { usePlayer } from "../context/PlayerProvider";
-import { useTrackDetails } from "../utils/useSpotifyQueries";
 import Entypo from "@expo/vector-icons/Entypo";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
+
+const { height: screenHeight } = Dimensions.get("window");
 
 const BottomPlayer = () => {
-  const { track,  isLoading, isError } = usePlayer();
-  
+  const { track, isLoading, isError } = usePlayer();
+
   if (!track) return null;
 
   return (
     <View
-      className={`w-full p-3 absolute bottom-14 ${track ? "block": "hidden"}`}
+      className={`w-full overflow-hidden h-[80px] p-3 bottom-14 absolute ${
+        track ? "block" : "hidden"
+      }`}
     >
       <Pressable
-        // onPress={() => console.log('Pressed', trackData?.id)}
-        className="bg-[#1ED760] w-full h-20 rounded-md p-3 flex-row"
+        onPress={() => router.push("/fullPlayer")}
+        className={`bg-[#1ED760] w-full h-full rounded-md p-2 flex-row`}
       >
         {isLoading && <ActivityIndicator />}
         {isError && (
@@ -28,7 +41,7 @@ const BottomPlayer = () => {
               <Image
                 source={{ uri: track?.imageUrl }}
                 style={{
-                  width: 50,
+                  width: 45,
                   height: "100%",
                   borderRadius: 6,
                 }}
@@ -49,7 +62,7 @@ const BottomPlayer = () => {
             </View>
 
             <View className="justify-center">
-              <Entypo name="controller-play" size={28} color="black" />
+              <Entypo name="controller-play" size={30} color="black" />
             </View>
           </View>
         )}

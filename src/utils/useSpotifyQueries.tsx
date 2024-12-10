@@ -1,4 +1,4 @@
-import { dataTagErrorSymbol, useQuery } from "@tanstack/react-query";
+import { dataTagErrorSymbol, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getAlbumData,
   getArtistsData,
@@ -104,6 +104,8 @@ export const useSingleArtistTracks = (artistId: string) => {
 }
 
 export const useTrackDetails = (trackId: string | null) => {
+  const queryClient = useQueryClient();
+
   const query =  useQuery({
     queryKey: [`track_${trackId}`],
     queryFn: () => getTrackDetails(trackId as string),

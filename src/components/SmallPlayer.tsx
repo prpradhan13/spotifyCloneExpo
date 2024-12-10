@@ -1,12 +1,26 @@
-import { ActivityIndicator, Image, Text, View } from "react-native";
-import React, { memo } from "react";
+import {
+  ActivityIndicator,
+  Animated,
+  Dimensions,
+  Image,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import React, { memo, useRef, useState } from "react";
 import { usePlayer } from "../context/PlayerProvider";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import { StyleSheet } from "react-native";
+import { router } from "expo-router";
 
 type SmallPlayerProps = {
   trackId: string;
 };
 
-const SmallPlayer = memo(({ trackId }: SmallPlayerProps) => {
+const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
+
+const SmallPlayer = memo(() => {
   const { track, isLoading, isError, error } = usePlayer();
 
   if (isLoading) {
@@ -26,9 +40,12 @@ const SmallPlayer = memo(({ trackId }: SmallPlayerProps) => {
   }
 
   return (
-    <View className="absolute right-4 bottom-14 w-24 h-24 rounded-full bg-[#1ED760]">
-      
-      
+    <Pressable
+      onPress={() => router.push('/fullPlayer')}
+      className={`w-24 h-24 overflow-hidden absolute right-4 bottom-14 ${
+        track ? "block" : "hidden"
+      } rounded-full bg-[#1ED760]`}
+    >
       {track?.imageUrl ? (
         <Image
           source={{ uri: track.imageUrl }}
@@ -37,7 +54,7 @@ const SmallPlayer = memo(({ trackId }: SmallPlayerProps) => {
       ) : (
         <Text className="text-center text-white">No Track</Text>
       )}
-    </View>
+    </Pressable>
   );
 });
 

@@ -1,6 +1,7 @@
 import { useContext, createContext, useState, PropsWithChildren, useEffect } from "react"
 import { useTrackDetails } from "../utils/useSpotifyQueries";
 import { PlayerContextType, TrackType } from "../types/TrackTypes";
+import { useQueryClient } from "@tanstack/react-query";
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
 

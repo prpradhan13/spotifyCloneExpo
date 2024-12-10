@@ -117,9 +117,9 @@ const index = () => {
       </Animated.ScrollView>
 
       {track && (
-        <View className="">
+        
           <SmallPlayer trackId={track?.id} />
-        </View>
+        
       )}
     </SafeAreaView>
   );
