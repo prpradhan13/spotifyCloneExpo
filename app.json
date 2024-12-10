@@ -41,7 +41,9 @@
             "./src/assets/fonts/Montserrat-Regular.ttf"
           ]
         }
-      ]
+      ],
+      "expo-audio",
+      "expo-video"
     ],
     "experiments": {
       "typedRoutes": true

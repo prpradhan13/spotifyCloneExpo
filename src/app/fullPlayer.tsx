@@ -1,5 +1,5 @@
 import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { usePlayer } from "../context/PlayerProvider";
 import { LinearGradient } from "expo-linear-gradient";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -8,44 +8,129 @@ import Slider from "@react-native-community/slider";
 import { router } from "expo-router";
 import Entypo from "@expo/vector-icons/Entypo";
 import Feather from "@expo/vector-icons/Feather";
-import { ScrollView } from "react-native-gesture-handler";
+import {
+  GestureHandlerRootView,
+  ScrollView,
+} from "react-native-gesture-handler";
+import { Audio } from "expo-av";
+import { useVideoPlayer, VideoView } from "expo-video";
+import videoSource from "@/src/assets/videoplayback.mp4";
 
 const fullPlayer = () => {
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [duration, setDuration] = useState(0);
+  const [position, setPosition] = useState(0);
   const { track, isLoading, isError, error } = usePlayer();
 
+  const playSound = async () => {
+    if (!sound) {
+      const { sound: newSound } = await Audio.Sound.createAsync(
+        require("@/src/assets/audio1.mp3")
+      );
+      setSound(newSound);
+      newSound.setOnPlaybackStatusUpdate(updatePlaybackStatus);
+      await newSound.playAsync();
+      setIsPlaying(true);
+    } else {
+      await sound.playAsync();
+      setIsPlaying(true);
+    }
+  };
+
+  // Pause sound
+  const pauseSound = async () => {
+    if (sound) {
+      await sound.pauseAsync();
+      setIsPlaying(false);
+    }
+  };
+
+  // Update playback status
+  const updatePlaybackStatus = (status: any) => {
+    if (status.isLoaded) {
+      setDuration(status.durationMillis || 0);
+      setPosition(status.positionMillis || 0);
+    }
+  };
+
+  // Seek to a position
+  const handleSeek = async (value: number) => {
+    if (sound) {
+      const newPosition = value * duration;
+      await sound.setPositionAsync(newPosition);
+      setPosition(newPosition);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (sound) {
+        sound.unloadAsync();
+      }
+    };
+  }, [sound]);
+
+  const formatTime = (millis: number) => {
+    const minutes = Math.floor(millis / 60000);
+    const seconds = Math.floor((millis % 60000) / 1000);
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
+
+  const videoPlayer = useVideoPlayer(
+    require("@/src/assets/videoplayback.mp4"),
+    (player) => {
+      player.loop = true
+      player.play();
+      player.loop = true;
+    }
+  );
+
   return (
-    <ScrollView showsHorizontalScrollIndicator={false} className="bg-black">
-      <View className="flex-1 px-[20px]">
-        <LinearGradient
-          colors={["#bd6405", "rgba(0,0,0,0.8)"]}
-          className="absolute left-0 right-0 bottom-0 h-full"
+    <View className="px-[20px] bg-black flex-1 justify-between">
+      {/* For Image LinearGradient */}
+      {/* <LinearGradient
+        colors={["#bd6405", "rgba(0,0,0,0.8)"]}
+        className="absolute left-0 right-0 bottom-0 h-full"
+      /> */}
+
+      {/* For Video LinearGradient */}
+      <LinearGradient
+        colors={["rgba(0,0,0,0.2)", "#000"]}
+        className="absolute left-0 right-0 bottom-0 h-full z-10"
+      />
+
+        <VideoView
+          player={videoPlayer}
+          style={{
+            width: 450,
+            height: 800,
+            position: "absolute",
+          }}
         />
 
-        <View className="pt-12">
-          <View className="flex-row justify-between h-[12vh]">
-            <Pressable onPress={() => router.back()}>
-              <AntDesign name="down" size={24} color="white" />
-            </Pressable>
+      <View className="pt-12">
+        <View className="flex-row justify-between h-[12vh] z-20">
+          <Pressable onPress={() => router.back()}>
+            <AntDesign name="down" size={24} color="white" />
+          </Pressable>
 
-            <Text className="text-white font-medium" numberOfLines={1}>
-              {" "}
-              {track?.trackName}{" "}
-            </Text>
+          <Text className="text-white font-medium" numberOfLines={1}>
+            {" "}
+            {track?.trackName}{" "}
+          </Text>
 
-            <MaterialCommunityIcons
-              name="dots-vertical"
-              size={24}
-              color="#fff"
-            />
-          </View>
-
-          <Image
-            source={{ uri: track?.imageUrl }}
-            style={{ width: "100%", height: 365, borderRadius: 15 }}
-            resizeMode="cover"
-          />
+          <MaterialCommunityIcons name="dots-vertical" size={24} color="#fff" />
         </View>
 
+        {/* <Image
+              source={{ uri: track?.imageUrl }}
+              style={{ width: "100%", height: 365, borderRadius: 15 }}
+              resizeMode="cover"
+            /> */}
+      </View>
+
+      <View className="z-20">
         {/* Details of track */}
         <View className="flex-row justify-between items-center mt-[45px]">
           {/* Left Part */}
@@ -74,8 +159,8 @@ const fullPlayer = () => {
         {/* Slider */}
         <Slider
           style={{ width: "100%", marginTop: 28 }}
-          value={0}
-          onSlidingComplete={(value) => console.log(value)}
+          value={position / (duration || 1)}
+          onSlidingComplete={handleSeek}
           minimumValue={0}
           maximumValue={1}
           minimumTrackTintColor="#FFFFFF"
@@ -83,15 +168,30 @@ const fullPlayer = () => {
           thumbTintColor="#fff"
         />
 
+        <View className="flex-row justify-between mt-1">
+          <Text className="text-white text-sm">{formatTime(position)}</Text>
+          <Text className="text-white text-sm">{formatTime(duration)}</Text>
+        </View>
+
         {/* Player buttons */}
         <View className="flex-row justify-between items-center mt-[30px]">
           <Entypo name="shuffle" size={24} color="#22c55e" />
 
           <View className="flex-row items-center gap-6">
             <AntDesign name="stepbackward" size={24} color="white" />
-            <TouchableOpacity className="bg-white w-[60px] h-[60px] justify-center items-center rounded-full">
-              <AntDesign name="caretright" size={24} color="black" />
+
+            {/* Button to Play Music */}
+            <TouchableOpacity
+              onPress={isPlaying ? pauseSound : playSound}
+              className="bg-white w-[60px] h-[60px] justify-center items-center rounded-full"
+            >
+              <AntDesign
+                name={isPlaying ? "pause" : "caretright"}
+                size={24}
+                color="black"
+              />
             </TouchableOpacity>
+
             <AntDesign name="stepforward" size={24} color="white" />
           </View>
 
@@ -103,16 +203,7 @@ const fullPlayer = () => {
           <Feather name="share-2" size={22} color="white" />
         </View>
       </View>
-
-      <View className="h-[30vh] px-[20px] mt-[34px]">
-        <View className="bg-[#949494] h-full rounded-xl p-5">
-          <Text className="text-lg font-bold tracking-wider text-white">
-            {" "}
-            Lyrics Preview{" "}
-          </Text>
-        </View>
-      </View>
-    </ScrollView>
+    </View>
   );
 };
 

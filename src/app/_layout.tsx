@@ -16,7 +16,7 @@ export const Layout = () => {
   // }, []);
 
   return (
-    <GestureHandlerRootView>
+    <>
       <StatusBar
         style="light"
         backgroundColor="rgba(0, 0, 0, 0.5)"
@@ -44,7 +44,7 @@ export const Layout = () => {
         />
         <Stack.Screen name="+not-found" />
       </Stack>
-    </GestureHandlerRootView>
+    </>
   );
 };
 
