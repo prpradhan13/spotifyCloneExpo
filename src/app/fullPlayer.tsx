@@ -1,4 +1,4 @@
-import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { usePlayer } from "../context/PlayerProvider";
 import { LinearGradient } from "expo-linear-gradient";
@@ -16,6 +16,7 @@ const fullPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [position, setPosition] = useState(0);
+  const [soundLoading, setSoundLoading] = useState(false);
   const { track, isLoading, isError, error } = usePlayer();
 
   const musicSampleUrl = track?.playbackData?.[0]?.musicSample || null;
@@ -26,9 +27,11 @@ const fullPlayer = () => {
   
   const playSound = async () => {
     if (!sound && musicSampleUrl) {
+      setSoundLoading(true);
       const { sound: newSound } = await Audio.Sound.createAsync({ uri: musicSampleUrl });
       
       setSound(newSound);
+      setSoundLoading(false);
       newSound.setOnPlaybackStatusUpdate(updatePlaybackStatus);
       await newSound.playAsync();
       setIsPlaying(true);
@@ -86,6 +89,7 @@ const fullPlayer = () => {
         // console.log("Playing video:", videoPlayerUrl);
         player.loop = true;
         player.play();
+        player.muted = true;
       } else {
         console.warn("No video sample provided.");
       }
@@ -199,11 +203,15 @@ const fullPlayer = () => {
               onPress={isPlaying ? pauseSound : playSound}
               className="bg-white w-[60px] h-[60px] justify-center items-center rounded-full"
             >
-              <AntDesign
-                name={isPlaying ? "pause" : "caretright"}
-                size={24}
-                color="black"
-              />
+              {soundLoading ? (
+                <ActivityIndicator size={"small"} color={"black"} />
+              ) : (
+                <AntDesign
+                  name={isPlaying ? "pause" : "caretright"}
+                  size={24}
+                  color="black"
+                />
+              )}
             </TouchableOpacity>
 
             <AntDesign name="stepforward" size={24} color="white" />
