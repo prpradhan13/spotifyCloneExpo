@@ -23,7 +23,7 @@ import SmallPlayer from "@/src/components/SmallPlayer";
 const index = () => {
   const { artistId } = useLocalSearchParams();
   const scrollY = useRef(new Animated.Value(0)).current; // Track scrolling
-  const { setTrackId, track } = usePlayer()
+  const { setTrackId, track } = usePlayer();
 
   const { data } = useSingleArtistTracks(artistId);
   const { artistDetails, isLoading, isError, error } =
@@ -39,8 +39,8 @@ const index = () => {
 
   const handleTrackClick = (trackId: string) => {
     setTrackId(trackId);
-  }
-  
+  };
+
   if (isLoading) {
     return (
       <View className="flex-1 bg-[#191414] justify-center items-center">
@@ -66,6 +66,7 @@ const index = () => {
           { useNativeDriver: false } // Needed for layout-related animations
         )}
         scrollEventThrottle={16} // Smooth scrolling
+        showsVerticalScrollIndicator={false}
         className="flex-1"
       >
         {/* Animated Image */}
@@ -93,9 +94,10 @@ const index = () => {
           </Text>
 
           {data?.map((track: any) => (
-            <Pressable 
+            <Pressable
               onPress={() => handleTrackClick(track?.id)}
-              key={track?.id} className="flex-row items-center mb-4"
+              key={track?.id}
+              className="flex-row items-center mb-4"
             >
               <Image
                 source={{ uri: track?.imageUrl }}
@@ -116,11 +118,7 @@ const index = () => {
         </View>
       </Animated.ScrollView>
 
-      {track && (
-        
-          <SmallPlayer trackId={track?.id} />
-        
-      )}
+      {track && <SmallPlayer />}
     </SafeAreaView>
   );
 };

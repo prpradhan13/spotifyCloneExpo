@@ -39,7 +39,7 @@ const BottomPlayer = () => {
           <View className="w-full flex-row justify-between">
             <View className="flex-row items-center gap-3">
               <Image
-                source={{ uri: track?.imageUrl }}
+                source={{ uri: track.normalizedTrack.imageUrl }}
                 style={{
                   width: 45,
                   height: "100%",
@@ -53,10 +53,10 @@ const BottomPlayer = () => {
                   className="text-black font-semibold max-w-48"
                   numberOfLines={1}
                 >
-                  {track?.trackName}
+                  {track.normalizedTrack.trackName}
                 </Text>
                 <Text className="text-black text-sm max-w-48" numberOfLines={1}>
-                  {track?.artists?.map((artist: any) => artist.name).join(", ")}
+                  {track?.normalizedTrack?.artists?.map((artist: any) => artist.name).join(", ")}
                 </Text>
               </View>
             </View>

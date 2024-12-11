@@ -46,9 +46,9 @@ const SmallPlayer = memo(() => {
         track ? "block" : "hidden"
       } rounded-full bg-[#1ED760]`}
     >
-      {track?.imageUrl ? (
+      {track?.normalizedTrack.imageUrl ? (
         <Image
-          source={{ uri: track.imageUrl }}
+          source={{ uri: track.normalizedTrack.imageUrl }}
           style={{ width: "100%", height: "100%", borderRadius: 100 }}
         />
       ) : (

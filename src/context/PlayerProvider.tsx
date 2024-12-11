@@ -10,7 +10,7 @@ export default function PlayerProvider({children}: PropsWithChildren) {
     const [track, setTrack] = useState<TrackType | null>(null);
 
     const { trackData, isLoading, isError, error } = useTrackDetails(trackId);
-
+    
     useEffect(() => {
       if (trackData) {
         setTrack(trackData); // Update the track state when data is fetched

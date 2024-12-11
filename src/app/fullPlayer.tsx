@@ -8,13 +8,8 @@ import Slider from "@react-native-community/slider";
 import { router } from "expo-router";
 import Entypo from "@expo/vector-icons/Entypo";
 import Feather from "@expo/vector-icons/Feather";
-import {
-  GestureHandlerRootView,
-  ScrollView,
-} from "react-native-gesture-handler";
 import { Audio } from "expo-av";
 import { useVideoPlayer, VideoView } from "expo-video";
-import videoSource from "@/src/assets/videoplayback.mp4";
 
 const fullPlayer = () => {
   const [sound, setSound] = useState<Audio.Sound | null>(null);
@@ -23,18 +18,25 @@ const fullPlayer = () => {
   const [position, setPosition] = useState(0);
   const { track, isLoading, isError, error } = usePlayer();
 
+  const musicSampleUrl = track?.playbackData?.[0]?.musicSample || null;
+  const videoPlayerUrl = track?.playbackData?.[0]?.videoSample || null;
+  // useEffect(() => {
+  //   console.log(musciSound);
+  // }, [musciSound]);
+  
   const playSound = async () => {
-    if (!sound) {
-      const { sound: newSound } = await Audio.Sound.createAsync(
-        require("@/src/assets/audio1.mp3")
-      );
+    if (!sound && musicSampleUrl) {
+      const { sound: newSound } = await Audio.Sound.createAsync({ uri: musicSampleUrl });
+      
       setSound(newSound);
       newSound.setOnPlaybackStatusUpdate(updatePlaybackStatus);
       await newSound.playAsync();
       setIsPlaying(true);
-    } else {
+    } else if (sound) {
       await sound.playAsync();
       setIsPlaying(true);
+    } else {
+      console.warn("No music sample provided.");
     }
   };
 
@@ -78,36 +80,44 @@ const fullPlayer = () => {
   };
 
   const videoPlayer = useVideoPlayer(
-    require("@/src/assets/videoplayback.mp4"),
+    videoPlayerUrl ? { uri: videoPlayerUrl } : null,
     (player) => {
-      player.loop = true
-      player.play();
-      player.loop = true;
+      if (videoPlayerUrl) {
+        // console.log("Playing video:", videoPlayerUrl);
+        player.loop = true;
+        player.play();
+      } else {
+        console.warn("No video sample provided.");
+      }
     }
   );
 
   return (
     <View className="px-[20px] bg-black flex-1 justify-between">
-      {/* For Image LinearGradient */}
-      {/* <LinearGradient
-        colors={["#bd6405", "rgba(0,0,0,0.8)"]}
-        className="absolute left-0 right-0 bottom-0 h-full"
-      /> */}
+      {track?.playbackData?.[0]?.videoSample && (
+        <>
+          <LinearGradient
+            colors={["rgba(0,0,0,0.2)", "#000"]}
+            className="absolute left-0 right-0 bottom-0 h-full z-10"
+          />
 
-      {/* For Video LinearGradient */}
-      <LinearGradient
-        colors={["rgba(0,0,0,0.2)", "#000"]}
-        className="absolute left-0 right-0 bottom-0 h-full z-10"
-      />
+          <VideoView
+            player={videoPlayer}
+            style={{
+              width: 450,
+              height: 800,
+              position: "absolute",
+            }}
+          />
+        </>
+      )}
 
-        <VideoView
-          player={videoPlayer}
-          style={{
-            width: 450,
-            height: 800,
-            position: "absolute",
-          }}
+      {!track?.playbackData?.[0]?.videoSample && (
+        <LinearGradient
+          colors={["#bd6405", "rgba(0,0,0,0.8)"]}
+          className="absolute left-0 right-0 bottom-0 h-full"
         />
+      )}
 
       <View className="pt-12">
         <View className="flex-row justify-between h-[12vh] z-20">
@@ -117,17 +127,19 @@ const fullPlayer = () => {
 
           <Text className="text-white font-medium" numberOfLines={1}>
             {" "}
-            {track?.trackName}{" "}
+            {track?.normalizedTrack.trackName}{" "}
           </Text>
 
           <MaterialCommunityIcons name="dots-vertical" size={24} color="#fff" />
         </View>
 
-        {/* <Image
-              source={{ uri: track?.imageUrl }}
-              style={{ width: "100%", height: 365, borderRadius: 15 }}
-              resizeMode="cover"
-            /> */}
+        {!track?.playbackData?.[0]?.videoSample && (
+          <Image
+            source={{ uri: track?.normalizedTrack.imageUrl }}
+            style={{ width: "100%", height: 365, borderRadius: 15 }}
+            resizeMode="cover"
+          />
+        )}
       </View>
 
       <View className="z-20">
@@ -139,13 +151,15 @@ const fullPlayer = () => {
               className="text-white font-bold text-[24px]"
               numberOfLines={1}
             >
-              {track?.trackName}
+              {track?.normalizedTrack.trackName}
             </Text>
             <Text
               className="text-[#d1d1d1] text-sm font-medium"
               numberOfLines={1}
             >
-              {track?.artists.map((elem) => elem.name).join(", ")}
+              {track?.normalizedTrack?.artists
+                .map((elem) => elem.name)
+                .join(", ")}
             </Text>
           </View>
 

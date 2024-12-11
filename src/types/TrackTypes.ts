@@ -14,11 +14,22 @@ export interface TrackDetails {
   imageUrl: string;
 }
 
-export type TrackType = {
+export type Track = {
   id: string;
   trackName: string;
   artists: ArtistType[];
   imageUrl: string;
+}
+
+export type Player = [{
+  id?: string,
+  musicSample?: string | undefined,
+  videoSample?: string | undefined,
+}]
+
+export type TrackType = {
+  normalizedTrack: Track,
+  playbackData?: Player | undefined
 };
 
 export type PlayerContextType = {
@@ -28,5 +39,3 @@ export type PlayerContextType = {
   isError: boolean;
   error: Error | null;
 };
-
-export type SinglePlaylistProps

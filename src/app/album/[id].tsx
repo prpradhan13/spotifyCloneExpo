@@ -136,6 +136,7 @@ const album = () => {
             keyExtractor={(item) => item?.id}
             initialNumToRender={20}
             removeClippedSubviews={true}
+            showsVerticalScrollIndicator={false}
             renderItem={({ item }) => <Tracks track={item} /> }
           />
         </View>
