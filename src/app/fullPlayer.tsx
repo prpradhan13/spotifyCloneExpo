@@ -202,6 +202,7 @@ const fullPlayer = () => {
             <TouchableOpacity
               onPress={isPlaying ? pauseSound : playSound}
               className="bg-white w-[60px] h-[60px] justify-center items-center rounded-full"
+              disabled={soundLoading}
             >
               {soundLoading ? (
                 <ActivityIndicator size={"small"} color={"black"} />

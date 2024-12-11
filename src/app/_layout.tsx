@@ -52,7 +52,9 @@ export default function MainLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <PlayerProvider>
-        <Layout />
+        <GestureHandlerRootView>
+          <Layout />
+        </GestureHandlerRootView>
       </PlayerProvider>
     </QueryClientProvider>
   );

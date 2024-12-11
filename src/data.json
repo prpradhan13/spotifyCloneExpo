@@ -1,5 +1,25 @@
 {
     "popularPlaylists": ["44YDp4eCFJedE5QPRzGXPd", "4z5whwZPQuMotubMwwlsLB", "3HcJoCoDBCfBjjEc2OEDfb", "3IpDoXyKOPgxJvUJYsagyM"],
     "popularAlbums": ["5KF4xCxDD8ip003hoatFT9", "0wkGNaTXbbxaD9QjvxlNGE", "5AivaZj0CiQJoDWqVH2pbh", "2P2orRpVU0F2Z1HGTi7AiS", "0a183xiCHiC1GQd8ou7WXO"],
-    "artists": ["4YRxDV8wJFPHPTeXepOstw", "2FKWNmZWDBZR4dE5KX4plR", "7uIbLdzzSEqnX0Pkrb56cR", "1mYsTxnqsietFxj1OgoGbG", "0y59o4v8uw5crbN9M3JiL1", "2GoeZ0qOTt6kjsWW4eA6LS"]
+    "artists": ["7uIbLdzzSEqnX0Pkrb56cR", "0y59o4v8uw5crbN9M3JiL1", "4YRxDV8wJFPHPTeXepOstw", "2FKWNmZWDBZR4dE5KX4plR", "1mYsTxnqsietFxj1OgoGbG", "2GoeZ0qOTt6kjsWW4eA6LS"],
+    "searchScreenImg": [
+        {
+            "id": "searchScreenImg_1",
+            "name": "music",
+            "color": "#dc148c",
+            "imageUrl": "https://i.scdn.co/image/ab67fb8200005caf474a477debc822a3a45c5acb"
+        },
+        {
+            "id": "searchScreenImg_2",
+            "name": "podcast",
+            "color": "#006450",
+            "imageUrl": "https://i.scdn.co/image/ab6765630000ba8a81f07e1ead0317ee3c285bfa"
+        },
+        {
+            "id": "searchScreenImg_3",
+            "name": "hip-hop",
+            "color": "#8400e7",
+            "imageUrl": "https://concerts.spotifycdn.com/images/live-events_category-image.jpg"
+        }
+    ]
 }

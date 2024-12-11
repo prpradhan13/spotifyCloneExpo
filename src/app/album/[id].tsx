@@ -130,13 +130,14 @@ const album = () => {
           </View>
         </View>
 
-        <View className="mt-6">
+        <View className="">
           <FlatList
             data={isPlaylist ? playListTracks : albumTracks} // Wrap `data` inside an array because `data` is a object
             keyExtractor={(item) => item?.id}
             initialNumToRender={20}
             removeClippedSubviews={true}
             showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 55, paddingTop: 10 }}
             renderItem={({ item }) => <Tracks track={item} /> }
           />
         </View>

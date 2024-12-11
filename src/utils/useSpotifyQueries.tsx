@@ -1,15 +1,17 @@
-import { dataTagErrorSymbol, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getAlbumData,
   getArtistsData,
   getArtistTracks,
   getPopularPlaylistsData,
+  getSearchResults,
   getSeveralAlbumsData,
   getSingleArtistData,
   getSinglePlaylistsData,
   getTrackDetails,
 } from "@/src/API/SpotifyAPI";
 import { useMemo } from "react";
+import { Track } from "../types/TrackTypes";
 
 export const usePopularAlbums = () => {
   const query = useQuery({
@@ -104,8 +106,6 @@ export const useSingleArtistTracks = (artistId: string) => {
 }
 
 export const useTrackDetails = (trackId: string | null) => {
-  const queryClient = useQueryClient();
-
   const query =  useQuery({
     queryKey: [`track_${trackId}`],
     queryFn: () => getTrackDetails(trackId as string),
@@ -116,4 +116,11 @@ export const useTrackDetails = (trackId: string | null) => {
     ...query,
     trackData: query.data?.trackDetails
   }
+}
+export const useSearchResults = (searchTerm: string) => {
+  return useQuery<Track[]>({
+    queryKey: [`track_${searchTerm}`],
+    queryFn: () => getSearchResults(searchTerm),
+    enabled: !!searchTerm
+  });
 }

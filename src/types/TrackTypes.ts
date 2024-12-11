@@ -39,3 +39,7 @@ export type PlayerContextType = {
   isError: boolean;
   error: Error | null;
 };
+
+export type SearchResults = {
+  searchData: Track[];
+}

@@ -1,5 +1,6 @@
 import axios from "axios";
 import data from "@/src/data.json";
+import { SearchResults } from "../types/TrackTypes";
 
 const api = axios.create({
     baseURL: `${process.env.EXPO_PUBLIC_API_URL}/api/v1/spotify`
@@ -117,6 +118,24 @@ export const getTrackDetails = async (trackId: string) => {
 
         return res.status === 200 ? res.data : {};
 
+    } catch (error: any) {
+        console.log(error.response?.data || error.message);
+        return {};
+    }
+}
+
+export const getSearchResults = async (searchTerm: string) => {
+    try {
+        const res = await api.get(
+            '/search',
+            {
+                params: {
+                    query: searchTerm,
+                }
+            }
+        );
+        
+        return res.status === 200 ? res.data?.searchData : [];
     } catch (error: any) {
         console.log(error.response?.data || error.message);
         return {};
