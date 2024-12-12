@@ -62,7 +62,7 @@ const BottomPlayer = () => {
             </View>
 
             <Pressable
-              onPress={isPlaying ? pauseAudio : () => playAudio(musicSampleUrl)}
+              onPress={pauseAudio}
               className="justify-center"
             >
               {soundLoading ? (

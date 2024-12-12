@@ -7,7 +7,7 @@ import {
 } from "react";
 import { useTrackDetails } from "../utils/useSpotifyQueries";
 import { PlayerContextType, TrackType } from "../types/TrackTypes";
-import { Audio } from "expo-av";
+import { Audio, AVPlaybackStatus } from "expo-av";
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
 
@@ -23,25 +23,13 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
   const { trackData, isLoading, isError, error } = useTrackDetails(trackId);
 
   useEffect(() => {
-    // Configure Audio for background playback
-    Audio.setAudioModeAsync({
-      playsInSilentModeIOS: true,
-      allowsRecordingIOS: false,
-      staysActiveInBackground: true,
-      interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-      shouldDuckAndroid: true,
-      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
-    });
-  }, []);
-
-  useEffect(() => {
     if (trackData) {
       setTrack(trackData); // Update the track state when data is fetched
     }
   }, [trackData]);
 
   // Play audio
-  const playAudio = async (musicSampleUrl: string | null) => {
+  const playAudio = async (musicSampleUrl: string | null | undefined) => {
     if (!musicSampleUrl) {
       // console.log("No audio URL provided yet.");
       return;
@@ -82,9 +70,13 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
   // Pause audio
   const pauseAudio = async () => {
     try {
-      if (sound) {
+      if (!sound) {
+        return;
+      }
+      if (isPlaying) {
         await sound.pauseAsync();
-        setIsPlaying(false);
+      } else {
+        await sound.playAsync();
       }
     } catch (error) {
       console.error("Error pausing audio:", error);
@@ -92,7 +84,7 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
   };
 
   // Update playback status
-  const updatePlaybackStatus = (status: any) => {
+  const updatePlaybackStatus = (status: AVPlaybackStatus) => {
     if (status.isLoaded) {
       setDuration(status.durationMillis || 0);
       setPosition(status.positionMillis || 0);
@@ -115,6 +107,7 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
       sound.setOnPlaybackStatusUpdate(updatePlaybackStatus);
       return () => {
         sound.setOnPlaybackStatusUpdate(null);
+        sound.unloadAsync();
       };
     }
   }, [sound]);

@@ -162,13 +162,7 @@ const fullPlayer = () => {
 
             {/* Button to Play Music */}
             <TouchableOpacity
-              onPress={async () => {
-                if (isPlaying) {
-                  await pauseAudio(); // Pause the audio
-                } else {
-                  await playAudio(musicSampleUrl); // Play the audio
-                }
-              }}
+              onPress={pauseAudio}
               className="bg-white w-[60px] h-[60px] justify-center items-center rounded-full"
               disabled={soundLoading}
             >
