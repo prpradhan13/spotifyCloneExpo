@@ -22,7 +22,17 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
 
   const { trackData, isLoading, isError, error } = useTrackDetails(trackId);
 
-  const musicSampleUrl = trackData?.playbackData?.[0]?.musicSample || null;
+  useEffect(() => {
+    // Configure Audio for background playback
+    Audio.setAudioModeAsync({
+      playsInSilentModeIOS: true,
+      allowsRecordingIOS: false,
+      staysActiveInBackground: true,
+      interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+      shouldDuckAndroid: true,
+      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
+    });
+  }, []);
 
   useEffect(() => {
     if (trackData) {
@@ -31,14 +41,13 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
   }, [trackData]);
 
   // Play audio
-  const playAudio = async () => {
+  const playAudio = async (musicSampleUrl: string | null) => {
     if (!musicSampleUrl) {
-      console.error("No music sample URL provided.");
+      // console.log("No audio URL provided yet.");
       return;
     }
-
+  
     setSoundLoading(true);
-
     try {
       // Stop and unload the previous sound if it exists
       if (sound) {
@@ -47,20 +56,18 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
         setSound(null);
       }
 
-      // Create a new sound and play it
+      // Create and play the new sound
       const { sound: newSound, status } = await Audio.Sound.createAsync(
         { uri: musicSampleUrl },
-        { shouldPlay: false } // Don't play immediately; wait for loading
+        { shouldPlay: true } // Play immediately after loading
       );
+      // console.log("new sound loaded");
 
       setSound(newSound);
 
-      // Set up the playback status update callback
+      // Set up playback status updates
       newSound.setOnPlaybackStatusUpdate(updatePlaybackStatus);
-
-      // Ensure the sound is loaded and ready before playing
       if (status.isLoaded) {
-        await newSound.playAsync();
         setIsPlaying(true);
       } else {
         console.error("Sound failed to load.");
@@ -89,6 +96,7 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
     if (status.isLoaded) {
       setDuration(status.durationMillis || 0);
       setPosition(status.positionMillis || 0);
+      setIsPlaying(status.isPlaying);
     }
   };
 
@@ -101,12 +109,14 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
     }
   };
 
+  // Listen to playback status
   useEffect(() => {
-    return () => {
-      if (sound) {
-        sound.unloadAsync();
-      }
-    };
+    if (sound) {
+      sound.setOnPlaybackStatusUpdate(updatePlaybackStatus);
+      return () => {
+        sound.setOnPlaybackStatusUpdate(null);
+      };
+    }
   }, [sound]);
 
   return (
@@ -114,6 +124,7 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
       value={{
         setTrackId,
         track,
+        setTrack,
         isLoading,
         isError,
         error,

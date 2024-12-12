@@ -24,7 +24,7 @@ import SmallPlayer from "@/src/components/SmallPlayer";
 
 const album = () => {
   const { queryTitle, id } = useLocalSearchParams();
-  const { track } = usePlayer();
+  const { track, soundLoading } = usePlayer();
 
   const isPlaylist = queryTitle === "Popular playlists";
 
@@ -138,7 +138,7 @@ const album = () => {
             removeClippedSubviews={true}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 55, paddingTop: 10 }}
-            renderItem={({ item }) => <Tracks track={item} /> }
+            renderItem={({ item }) => <Tracks tracks={item} /> }
           />
         </View>
       </View>

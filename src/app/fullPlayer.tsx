@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { usePlayer } from "../context/PlayerProvider";
 import { LinearGradient } from "expo-linear-gradient";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -15,16 +15,27 @@ import Slider from "@react-native-community/slider";
 import { router } from "expo-router";
 import Entypo from "@expo/vector-icons/Entypo";
 import Feather from "@expo/vector-icons/Feather";
-import { Audio } from "expo-av";
 import { useVideoPlayer, VideoView } from "expo-video";
 
 const fullPlayer = () => {
-  const { track,  playAudio, pauseAudio, isPlaying, position, duration, soundLoading, seekAudio } = usePlayer();
+  const {
+    track,
+    playAudio,
+    pauseAudio,
+    isPlaying,
+    position,
+    duration,
+    soundLoading,
+    seekAudio,
+  } = usePlayer();
 
+  const musicSampleUrl = track?.playbackData?.[0]?.musicSample || null;
   const videoPlayerUrl = track?.playbackData?.[0]?.videoSample || null;
-  
+
   useEffect(() => {
-    playAudio();
+    if (musicSampleUrl) {
+      playAudio(musicSampleUrl);
+    }
   }, [track]);
 
   const formatTime = (millis: number) => {
@@ -82,7 +93,7 @@ const fullPlayer = () => {
 
           <Text className="text-white font-medium" numberOfLines={1}>
             {" "}
-            {track?.normalizedTrack.trackName}{" "}
+            {track?.normalizedTrack?.trackName}{" "}
           </Text>
 
           <MaterialCommunityIcons name="dots-vertical" size={24} color="#fff" />
@@ -90,7 +101,7 @@ const fullPlayer = () => {
 
         {!track?.playbackData?.[0]?.videoSample && (
           <Image
-            source={{ uri: track?.normalizedTrack.imageUrl }}
+            source={{ uri: track?.normalizedTrack?.imageUrl }}
             style={{ width: "100%", height: 365, borderRadius: 15 }}
             resizeMode="cover"
           />
@@ -106,7 +117,7 @@ const fullPlayer = () => {
               className="text-white font-bold text-[24px]"
               numberOfLines={1}
             >
-              {track?.normalizedTrack.trackName}
+              {track?.normalizedTrack?.trackName}
             </Text>
             <Text
               className="text-[#d1d1d1] text-sm font-medium"
@@ -151,7 +162,13 @@ const fullPlayer = () => {
 
             {/* Button to Play Music */}
             <TouchableOpacity
-              onPress={isPlaying ? pauseAudio : () => playAudio()}
+              onPress={async () => {
+                if (isPlaying) {
+                  await pauseAudio(); // Pause the audio
+                } else {
+                  await playAudio(musicSampleUrl); // Play the audio
+                }
+              }}
               className="bg-white w-[60px] h-[60px] justify-center items-center rounded-full"
               disabled={soundLoading}
             >

@@ -14,6 +14,8 @@ const BottomPlayer = () => {
   const { track, isLoading, isError, isPlaying, pauseAudio, playAudio, soundLoading } =
     usePlayer();
 
+  const musicSampleUrl = track?.playbackData?.[0]?.musicSample;
+
   if (!track) return null;
 
   return (
@@ -35,7 +37,7 @@ const BottomPlayer = () => {
           <View className="w-full flex-row justify-between">
             <View className="flex-row items-center gap-3">
               <Image
-                source={{ uri: track.normalizedTrack.imageUrl }}
+                source={{ uri: track?.normalizedTrack?.imageUrl }}
                 style={{
                   width: 45,
                   height: "100%",
@@ -49,7 +51,7 @@ const BottomPlayer = () => {
                   className="text-black font-semibold max-w-48"
                   numberOfLines={1}
                 >
-                  {track.normalizedTrack.trackName}
+                  {track?.normalizedTrack?.trackName}
                 </Text>
                 <Text className="text-black text-sm max-w-48" numberOfLines={1}>
                   {track?.normalizedTrack?.artists
@@ -60,7 +62,7 @@ const BottomPlayer = () => {
             </View>
 
             <Pressable
-              onPress={isPlaying ? pauseAudio : () => playAudio()}
+              onPress={isPlaying ? pauseAudio : () => playAudio(musicSampleUrl)}
               className="justify-center"
             >
               {soundLoading ? (

@@ -23,7 +23,7 @@ import SmallPlayer from "@/src/components/SmallPlayer";
 const index = () => {
   const { artistId } = useLocalSearchParams();
   const scrollY = useRef(new Animated.Value(0)).current; // Track scrolling
-  const { setTrackId, track } = usePlayer();
+  const { setTrackId, track, setTrack, playAudio } = usePlayer();
 
   const { data } = useSingleArtistTracks(artistId);
   const { artistDetails, isLoading, isError, error } =
@@ -37,8 +37,13 @@ const index = () => {
     extrapolate: "clamp", // Prevent values outside range
   });
 
-  const handleTrackClick = async (trackId: string) => {
-    setTrackId(trackId);
+  const handleTrackClick = async (tracks: any) => {
+    if (track?.normalizedTrack?.id !== tracks?.id) {
+      setTrackId(tracks?.id);
+      setTrack(tracks);
+      await playAudio(tracks?.playbackData?.[0]?.musicSample)
+    }
+    router.push('/fullPlayer')
   };
 
   if (isLoading) {
@@ -93,14 +98,14 @@ const index = () => {
             Top Tracks
           </Text>
 
-          {data?.map((track: any) => (
+          {data?.map((tracks: any) => (
             <Pressable
-              onPress={() => handleTrackClick(track?.id)}
-              key={track?.id}
+              onPress={() => handleTrackClick(tracks)}
+              key={tracks?.id}
               className="flex-row items-center mb-4"
             >
               <Image
-                source={{ uri: track?.imageUrl }}
+                source={{ uri: tracks?.imageUrl }}
                 style={{
                   width: 60,
                   height: 60,
@@ -110,7 +115,7 @@ const index = () => {
               />
               <View>
                 <Text className="text-white font-semibold">
-                  {track?.trackName}
+                  {tracks?.trackName}
                 </Text>
               </View>
             </Pressable>

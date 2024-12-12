@@ -35,11 +35,12 @@ export type TrackType = {
 export type PlayerContextType = {
   setTrackId: (trackId: string | null) => void;
   track: TrackType | null;
+  setTrack: (track: TrackType | null) => void;
   isLoading: boolean;
   isError: boolean;
   error: Error | null;
   isPlaying: boolean; 
-  playAudio: () => Promise<void>;
+  playAudio: (musicSampleUrl: string | null | undefined) => Promise<void>;
   pauseAudio: () => Promise<void>;
   seekAudio: (value: number) => Promise<void>;
   position: number;
