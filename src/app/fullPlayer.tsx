@@ -1,4 +1,11 @@
-import { ActivityIndicator, Image, Pressable, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { usePlayer } from "../context/PlayerProvider";
 import { LinearGradient } from "expo-linear-gradient";
@@ -12,69 +19,13 @@ import { Audio } from "expo-av";
 import { useVideoPlayer, VideoView } from "expo-video";
 
 const fullPlayer = () => {
-  const [sound, setSound] = useState<Audio.Sound | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [duration, setDuration] = useState(0);
-  const [position, setPosition] = useState(0);
-  const [soundLoading, setSoundLoading] = useState(false);
-  const { track, isLoading, isError, error } = usePlayer();
+  const { track,  playAudio, pauseAudio, isPlaying, position, duration, soundLoading, seekAudio } = usePlayer();
 
-  const musicSampleUrl = track?.playbackData?.[0]?.musicSample || null;
   const videoPlayerUrl = track?.playbackData?.[0]?.videoSample || null;
-  // useEffect(() => {
-  //   console.log(musciSound);
-  // }, [musciSound]);
   
-  const playSound = async () => {
-    if (!sound && musicSampleUrl) {
-      setSoundLoading(true);
-      const { sound: newSound } = await Audio.Sound.createAsync({ uri: musicSampleUrl });
-      
-      setSound(newSound);
-      setSoundLoading(false);
-      newSound.setOnPlaybackStatusUpdate(updatePlaybackStatus);
-      await newSound.playAsync();
-      setIsPlaying(true);
-    } else if (sound) {
-      await sound.playAsync();
-      setIsPlaying(true);
-    } else {
-      console.warn("No music sample provided.");
-    }
-  };
-
-  // Pause sound
-  const pauseSound = async () => {
-    if (sound) {
-      await sound.pauseAsync();
-      setIsPlaying(false);
-    }
-  };
-
-  // Update playback status
-  const updatePlaybackStatus = (status: any) => {
-    if (status.isLoaded) {
-      setDuration(status.durationMillis || 0);
-      setPosition(status.positionMillis || 0);
-    }
-  };
-
-  // Seek to a position
-  const handleSeek = async (value: number) => {
-    if (sound) {
-      const newPosition = value * duration;
-      await sound.setPositionAsync(newPosition);
-      setPosition(newPosition);
-    }
-  };
-
   useEffect(() => {
-    return () => {
-      if (sound) {
-        sound.unloadAsync();
-      }
-    };
-  }, [sound]);
+    playAudio();
+  }, [track]);
 
   const formatTime = (millis: number) => {
     const minutes = Math.floor(millis / 60000);
@@ -178,7 +129,7 @@ const fullPlayer = () => {
         <Slider
           style={{ width: "100%", marginTop: 28 }}
           value={position / (duration || 1)}
-          onSlidingComplete={handleSeek}
+          onSlidingComplete={seekAudio}
           minimumValue={0}
           maximumValue={1}
           minimumTrackTintColor="#FFFFFF"
@@ -200,7 +151,7 @@ const fullPlayer = () => {
 
             {/* Button to Play Music */}
             <TouchableOpacity
-              onPress={isPlaying ? pauseSound : playSound}
+              onPress={isPlaying ? pauseAudio : () => playAudio()}
               className="bg-white w-[60px] h-[60px] justify-center items-center rounded-full"
               disabled={soundLoading}
             >

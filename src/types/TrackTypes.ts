@@ -38,6 +38,13 @@ export type PlayerContextType = {
   isLoading: boolean;
   isError: boolean;
   error: Error | null;
+  isPlaying: boolean; 
+  playAudio: () => Promise<void>;
+  pauseAudio: () => Promise<void>;
+  seekAudio: (value: number) => Promise<void>;
+  position: number;
+  duration: number;
+  soundLoading: boolean;
 };
 
 export type SearchResults = {

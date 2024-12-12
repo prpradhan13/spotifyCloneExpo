@@ -10,7 +10,7 @@ import {
   Pressable,
 } from "react-native";
 import React, { useRef } from "react";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   useSingleArtist,
@@ -37,7 +37,7 @@ const index = () => {
     extrapolate: "clamp", // Prevent values outside range
   });
 
-  const handleTrackClick = (trackId: string) => {
+  const handleTrackClick = async (trackId: string) => {
     setTrackId(trackId);
   };
 

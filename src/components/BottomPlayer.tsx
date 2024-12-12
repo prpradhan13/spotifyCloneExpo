@@ -1,22 +1,18 @@
 import {
   ActivityIndicator,
-  Animated,
-  Dimensions,
   Image,
   Pressable,
   Text,
   View,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React from "react";
 import { usePlayer } from "../context/PlayerProvider";
-import Entypo from "@expo/vector-icons/Entypo";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
-
-const { height: screenHeight } = Dimensions.get("window");
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 const BottomPlayer = () => {
-  const { track, isLoading, isError } = usePlayer();
+  const { track, isLoading, isError, isPlaying, pauseAudio, playAudio, soundLoading } =
+    usePlayer();
 
   if (!track) return null;
 
@@ -56,14 +52,27 @@ const BottomPlayer = () => {
                   {track.normalizedTrack.trackName}
                 </Text>
                 <Text className="text-black text-sm max-w-48" numberOfLines={1}>
-                  {track?.normalizedTrack?.artists?.map((artist: any) => artist.name).join(", ")}
+                  {track?.normalizedTrack?.artists
+                    ?.map((artist: any) => artist.name)
+                    .join(", ")}
                 </Text>
               </View>
             </View>
 
-            <View className="justify-center">
-              <Entypo name="controller-play" size={30} color="black" />
-            </View>
+            <Pressable
+              onPress={isPlaying ? pauseAudio : () => playAudio()}
+              className="justify-center"
+            >
+              {soundLoading ? (
+                <ActivityIndicator size={"small"} color={"black"} />
+              ) : (
+                <AntDesign
+                  name={isPlaying ? "pause" : "caretright"}
+                  size={24}
+                  color="black"
+                />
+              )}
+            </Pressable>
           </View>
         )}
       </Pressable>
