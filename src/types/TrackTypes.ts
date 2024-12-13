@@ -47,7 +47,3 @@ export type PlayerContextType = {
   duration: number;
   soundLoading: boolean;
 };
-
-export type SearchResults = {
-  searchData: Track[];
-}

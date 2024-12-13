@@ -6,15 +6,12 @@ import { ArtistType } from "../types/TrackTypes";
 import { router } from "expo-router";
 
 const Tracks = React.memo(({ tracks }: any) => {
-  const { track, setTrack, setTrackId, playAudio } = usePlayer();
+  const { track, setTrackId, playAudio } = usePlayer();
 
   const handleTrackPress = async () => {
     if (track?.normalizedTrack?.id !== tracks?.id) {
-      setTrackId(tracks?.id); // Set the new track ID
-      setTrack(tracks); // Update the track state in PlayerProvider
-      await playAudio(tracks?.playbackData?.[0]?.musicSample); // Play the new track
+      setTrackId(tracks?.id);
     }
-  
     router.push('/fullPlayer');
   }
   

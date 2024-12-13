@@ -2,11 +2,9 @@ import {
   ActivityIndicator,
   Image,
   ImageBackground,
-  ScrollView,
   Text,
   View,
   Animated,
-  StyleSheet,
   Pressable,
 } from "react-native";
 import React, { useRef } from "react";
@@ -17,17 +15,18 @@ import {
   useSingleArtistTracks,
 } from "@/src/utils/useSpotifyQueries";
 import { usePlayer } from "@/src/context/PlayerProvider";
-import BottomPlayer from "@/src/components/BottomPlayer";
 import SmallPlayer from "@/src/components/SmallPlayer";
 
 const index = () => {
   const { artistId } = useLocalSearchParams();
+  const singleArtistId = Array.isArray(artistId) ? artistId[0] : artistId;
+
   const scrollY = useRef(new Animated.Value(0)).current; // Track scrolling
   const { setTrackId, track, setTrack, playAudio } = usePlayer();
 
-  const { data } = useSingleArtistTracks(artistId);
+  const { data } = useSingleArtistTracks(singleArtistId);
   const { artistDetails, isLoading, isError, error } =
-    useSingleArtist(artistId);
+    useSingleArtist(singleArtistId);
 
   const artistImage = artistDetails?.imageUrl;
 
@@ -45,6 +44,7 @@ const index = () => {
     }
     router.push('/fullPlayer')
   };
+
 
   if (isLoading) {
     return (

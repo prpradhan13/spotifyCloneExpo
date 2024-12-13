@@ -10,7 +10,18 @@ import { usePlayer } from "../context/PlayerProvider";
 import { router } from "expo-router";
 
 const SmallPlayer = memo(() => {
-  const { track, isLoading, isError, error, soundLoading } = usePlayer();
+  const { track, isLoading, isError, error, soundLoading, isPlaying, playAudio, position } = usePlayer();
+
+  const musicSampleUrl = track?.playbackData?.[0].musicSample;
+
+  const handleSmallPlayerPress = () => {
+    if (!isPlaying && musicSampleUrl) {
+      // If not playing, start the track
+      playAudio(musicSampleUrl);
+    }
+    // Navigate to full player view
+    router.push("/fullPlayer");
+  };
 
   if (isLoading && soundLoading) {
     return (
@@ -30,7 +41,7 @@ const SmallPlayer = memo(() => {
 
   return (
     <Pressable
-      onPress={() => router.push('/fullPlayer')}
+      onPress={handleSmallPlayerPress}
       className={`w-24 h-24 overflow-hidden absolute right-4 bottom-14 ${
         track ? "block" : "hidden"
       } rounded-full bg-[#1ED760]`}

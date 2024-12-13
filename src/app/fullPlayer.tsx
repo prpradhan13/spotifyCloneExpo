@@ -32,6 +32,8 @@ const fullPlayer = () => {
   const musicSampleUrl = track?.playbackData?.[0]?.musicSample || null;
   const videoPlayerUrl = track?.playbackData?.[0]?.videoSample || null;
 
+  const currentPlayingRef = React.useRef<string | null>(null);
+
   useEffect(() => {
     if (musicSampleUrl) {
       playAudio(musicSampleUrl);
@@ -48,12 +50,9 @@ const fullPlayer = () => {
     videoPlayerUrl ? { uri: videoPlayerUrl } : null,
     (player) => {
       if (videoPlayerUrl) {
-        // console.log("Playing video:", videoPlayerUrl);
         player.loop = true;
         player.play();
         player.muted = true;
-      } else {
-        console.warn("No video sample provided.");
       }
     }
   );

@@ -24,13 +24,15 @@ import SmallPlayer from "@/src/components/SmallPlayer";
 
 const album = () => {
   const { queryTitle, id } = useLocalSearchParams();
-  const { track, soundLoading } = usePlayer();
+  const singleId = Array.isArray(id) ? id[0] : id;
+
+  const { track } = usePlayer();
 
   const isPlaylist = queryTitle === "Popular playlists";
 
   const { data, isLoading, isError, error } = isPlaylist
-    ? useSinglePlaylist(id)
-    : useSingleAlbum(id);
+    ? useSinglePlaylist(singleId)
+    : useSingleAlbum(singleId);
 
   const image = data?.imageUrl;
   const artistNames = data?.artist?.map((item: any) => item.name) || "";

@@ -31,7 +31,6 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
   // Play audio
   const playAudio = async (musicSampleUrl: string | null | undefined) => {
     if (!musicSampleUrl) {
-      // console.log("No audio URL provided yet.");
       return;
     }
   
@@ -85,6 +84,7 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
 
   // Update playback status
   const updatePlaybackStatus = (status: AVPlaybackStatus) => {
+    // console.log(status);
     if (status.isLoaded) {
       setDuration(status.durationMillis || 0);
       setPosition(status.positionMillis || 0);
@@ -106,8 +106,8 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
     if (sound) {
       sound.setOnPlaybackStatusUpdate(updatePlaybackStatus);
       return () => {
-        sound.setOnPlaybackStatusUpdate(null);
-        sound.unloadAsync();
+        sound.setOnPlaybackStatusUpdate(null); // Remove the status update listener
+        sound.unloadAsync(); // Unload the sound to free up resources
       };
     }
   }, [sound]);
