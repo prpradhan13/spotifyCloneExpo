@@ -1,6 +1,5 @@
 import axios from "axios";
 import data from "@/src/data.json";
-import { SearchResults } from "../types/TrackTypes";
 
 const api = axios.create({
     baseURL: `${process.env.EXPO_PUBLIC_API_URL}/api/v1/spotify`
