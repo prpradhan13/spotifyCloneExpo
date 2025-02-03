@@ -1,50 +1,91 @@
-# Welcome to your Expo app 👋
+# Welcome to Spotify Clone App 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
+## Introduction
+
+The Spotify Clone is a feature-rich mobile application that replicates the core functionalities of the popular music streaming platform, Spotify. This project leverages the Spotify Web API to fetch music data, integrates a custom backend for efficient data management, and delivers a seamless user experience through a visually appealing frontend built with Expo. The app not only allows users to explore and play songs but also enhances the listening experience with short video backgrounds synchronized to the music.
+
+## Features
+- **Music Streaming**
+- **Multimedia Backgrounds**
+- **Custom Backend Integration**
+- **Interactive User Interface**
+- **Seamless Playback**
+
+
 ## Get started
 
-1. Install dependencies
+Let's start with the server of this application.
+
+1. Clonning the server repository:
+
+   ```bash
+   git clone https://github.com/prpradhan13/spotifyCloneServer.git
+   ```
+
+2. Go to the server directory
+
+   ```bash
+   cd spotifyCloneServer
+   ```
+
+3. Install dependencies:
 
    ```bash
    npm install
    ```
 
-2. Start the app
+- [Get API informations](https://developer.spotify.com/documentation/web-api): Follow the documentation and get your own API details
 
-   ```bash
-    npx expo start
+4. Set up environment variables:
+
+   - Create a `.env` file in the root directory.
+   - Add the following variables:
    ```
 
-In the output, you'll find options to open the app in a
+   PORT=8080
+   CLIENT_ID=your_spotify_web_api_client_id
+   CLIENT_SECRET=your_spotify_web_api_client_secret
+   ```
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+5. Start the development server:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+   ```bash
+   npm run server
+   ```
 
-## Get a fresh project
+Now Let's set up our frontend part.
 
-When you're ready, run:
+6. Clonning the frontend repository:
 
-```bash
-npm run reset-project
-```
+   ```bash
+   git clone https://github.com/prpradhan13/spotifyCloneExpo.git
+   ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+7. Go to the frontend directory
 
-## Learn more
+   ```bash
+   cd spotifyCloneExpo
+   ```
 
-To learn more about developing your project with Expo, look at the following resources:
+8. Install dependencies:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+   ```bash
+   npm install
+   ```
 
-## Join the community
+9. Set up environment variables:
 
-Join our community of developers creating universal apps.
+   - Create a `.env` file in the root directory.
+   - Add the following variables:
+   ```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+   EXPO_PUBLIC_API_URL:your_spotify_server_url
+   ```
+
+10. Start the development server:
+
+   ```bash
+   npm run start
+   ```
