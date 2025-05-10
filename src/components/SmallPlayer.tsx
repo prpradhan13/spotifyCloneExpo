@@ -12,7 +12,7 @@ import { router } from "expo-router";
 const SmallPlayer = memo(() => {
   const { track, isLoading, isError, error, soundLoading, isPlaying, playAudio, position } = usePlayer();
 
-  const musicSampleUrl = track?.playbackData?.[0].musicSample;
+  const musicSampleUrl = track?.playbackData?.[0]?.musicSample;
 
   const handleSmallPlayerPress = () => {
     if (!isPlaying && musicSampleUrl) {
